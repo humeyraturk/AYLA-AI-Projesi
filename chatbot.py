@@ -147,14 +147,12 @@ def generate_response(user_message: str) -> str:
     
     # System prompt
     system = """Sen Ayla, samimi ve zeki bir AI asistanısın. 
-
 ÖZELLİKLERİN:
 - Modern yapay zeka asistanları gibi doğal, akıcı konuşursun
 - Kısa ve öz cevaplar verirsin (2-4 cümle)
 - Emoji kullanabilirsin ama abartma
 - "Ben bir AI'yım ama..." gibi klişe cümleler kurma
 - Psikoloji konusunda uzman bilgin var
-
 KURALLAR:
 1. Her konuda rahat sohbet et (hava, spor, yemek, teknoloji...)
 2. Psikoloji/BDT soruları için bilgi bankamı kullan
@@ -447,24 +445,18 @@ HTML_TEMPLATE = """
             <h1>💜 Ayla AI</h1>
             <p>Sohbet & Psikoloji Asistanı</p>
         </header>
-
         <div id="chat-box">
             <div class="message bot-message">Merhaba! Ben Ayla 😊
-
 Benimle her şey hakkında konuşabilirsin. Psikoloji, BDT ve mindfulness konularında da özel bilgim var.
-
 Hadi sohbete başlayalım!</div>
         </div>
-
         <div id="input-area">
             <input type="text" id="user-input" placeholder="Mesajını yaz..." autocomplete="off">
             <button onclick="sendMessage()" id="send-btn">Gönder</button>
         </div>
     </div>
-
     <script>
         let isWaiting = false;
-
         function sendMessage() {
             if (isWaiting) return;
             
@@ -494,7 +486,6 @@ Hadi sohbete başlayalım!</div>
             input.disabled = true;
             sendBtn.disabled = true;
             isWaiting = true;
-
             fetch('/chat', {
                 method: 'POST',
                 headers: { 'Content-Type': 'application/json' },
@@ -526,7 +517,6 @@ Hadi sohbete başlayalım!</div>
                 isWaiting = false;
             });
         }
-
         document.addEventListener('DOMContentLoaded', () => {
             const input = document.getElementById('user-input');
             input.addEventListener('keydown', (e) => {
@@ -576,21 +566,31 @@ def chat_endpoint():
         print(f"❌ Chat hatası: {e}")
         return jsonify({'response': 'Bir sorun oluştu, tekrar dener misin? 😊'})
 
+# ... (chat_endpoint fonksiyonunun sonu burada olmalı) ...
+
+# --- UYGULAMAYI BAŞLATMA ---
+# Gunicorn'un ve lokal çalıştırmanın 'client' ve 'vector_db' değişkenlerini
+# başlatabilmesi için bu bloğu '__main__' dışına taşıyoruz.
+print("=" * 70)
+print("💜 AYLA AI - GELİŞMİŞ SOHBET ASİSTANI")
+print("=" * 70)
+
+# setup_vector_db()'yi global scope'ta (en dış katmanda) çağır
+if setup_vector_db():
+    mode = "Tam Özellikli" if vector_db else "Sohbet Modu"
+    print(f"✓ Mod: {mode}")
+    print(f"✓ Model: {GEMINI_MODEL}")
+    # Not: HF için IP/Port yazdırmak çok önemli değil ama zararı da yok.
+    print(f"✓ Adres (Lokal): http://{HOST_IP}:{PORT_NUMBER}") 
+    print("=" * 70)
+else:
+    # Bu hata mesajı artık hem lokalde hem de HF'de görünür olacak
+    print("❌ Başlatma başarısız. .env dosyanızı (veya HF Secrets) kontrol edin.")
+
+# Lokal'de 'python chatbot.py' komutuyla çalıştırmak için bu blok kalmalı
+# Gunicorn bu bloğu GÖRMEYECEK, bu normal.
 if __name__ == '__main__':
+    print("🌐 Tarayıcınızda yukarıdaki adresi açın!")
+    print("⌨️  Ctrl+C ile durdurun")
     print("=" * 70)
-    print("💜 AYLA AI - GELİŞMİŞ SOHBET ASİSTANI")
-    print("=" * 70)
-    
-    if setup_vector_db():
-        mode = "Tam Özellikli" if vector_db else "Sohbet Modu"
-        print(f"✓ Mod: {mode}")
-        print(f"✓ Model: {GEMINI_MODEL}")
-        print(f"✓ Adres: http://{HOST_IP}:{PORT_NUMBER}")
-        print("=" * 70)
-        print("🌐 Tarayıcınızda yukarıdaki adresi açın!")
-        print("⌨️  Ctrl+C ile durdurun")
-        print("=" * 70)
-        
-        app.run(host=HOST_IP, port=PORT_NUMBER, debug=False, use_reloader=False)
-    else:
-        print("❌ Başlatma başarısız. .env dosyanızı kontrol edin.")
+    app.run(host=HOST_IP, port=PORT_NUMBER, debug=False, use_reloader=False)
