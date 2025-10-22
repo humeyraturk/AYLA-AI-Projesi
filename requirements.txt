@@ -1,0 +1,10 @@
+flask
+google-genai
+google-api-core
+pypdf
+langchain-community
+langchain-text-splitters
+langchain-huggingface
+sentence-transformers
+faiss-cpu
+python-dotenv

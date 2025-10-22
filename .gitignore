@@ -1,0 +1,16 @@
+# Python
+__pycache__/
+*.pyc
+venv/
+*.venv/
+env/
+*.env
+
+# Veritabanı ve İndeksler
+faiss_index/
+*.db
+*.sqlite3
+
+# İşletim Sistemi Dosyaları
+.DS_Store
+Thumbs.db
