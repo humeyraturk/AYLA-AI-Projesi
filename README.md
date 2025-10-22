@@ -108,6 +108,4 @@ Proje sonucunda, hem genel konularda sohbet edebilen hem de sağlanan PDF kaynak
 
 ## 7. Web Linki 
 
-*(Eğer projeni Hugging Face Spaces, Streamlit Cloud, PythonAnywhere vb. bir platforma yüklersen (deploy edersen), çalışan linki buraya eklemelisin. Lokal çalışma için bu kısım boş kalabilir.)*
-
 **Deploy Linki:** https://huggingface.co/spaces/humeyraturkk/AYLA-AI-Projesi
