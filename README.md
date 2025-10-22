@@ -1,16 +1,16 @@
 # 💜 AYLA AI - Gelişmiş Sohbet & Psikoloji Asistanı
 
-[cite_start]Bu proje, **Akbank GenAI Bootcamp: Yeni Nesil Proje Kampı**  [cite_start]kapsamında geliştirilmiş, RAG (Retrieval Augmented Generation)  tabanlı bir sohbet asistanıdır.
+Bu proje, **Akbank GenAI Bootcamp: Yeni Nesil Proje Kampı** kapsamında geliştirilmiş, RAG (Retrieval Augmented Generation)  tabanlı bir sohbet asistanıdır.
 
 ---
 
-## [cite_start]1. Projenin Amacı [cite: 9]
+## 1. Projenin Amacı 
 
 Projenin temel amacı, kullanıcılara psikoloji, Bilişsel Davranışçı Terapi (BDT) ve mindfulness (farkındalık) konularında uzmanlaşmış, doğru ve güvenilir bilgiler sunabilen bir yapay zeka asistanı oluşturmaktır. Genel sohbet yeteneklerine ek olarak, "Ayla" RAG mimarisi sayesinde belirli PDF dokümanlarındaki bilgileri kullanarak spesifik sorulara kaynak bazlı yanıtlar verebilir.
 
-## [cite_start]2. Veri Seti Hakkında Bilgi [cite: 10]
+## 2. Veri Seti Hakkında Bilgi 
 
-[cite_start]Bu proje için özel bir veri seti toplanmamıştır. [cite_start]Bunun yerine, asistanın uzmanlık alanı (psikoloji) için bilgi kaynağı olarak üç adet PDF dokümanı kullanılmıştır[cite: 17]:
+Bu proje için özel bir veri seti toplanmamıştır.Bunun yerine, asistanın uzmanlık alanı (psikoloji) için bilgi kaynağı olarak üç adet PDF dokümanı kullanılmıştır:
 
 1.  **psikoloji_sozlugu.pdf:** Psikoloji ile ilgili temel terimleri ve tanımları içerir.
 2.  **mindfulness_egzersizleri.pdf:** Farkındalık ve meditasyon egzersizleri hakkında pratik bilgiler sunar.
@@ -18,7 +18,7 @@ Projenin temel amacı, kullanıcılara psikoloji, Bilişsel Davranışçı Terap
 
 Bu dokümanlar, LangChain kütüphanesi kullanılarak işlenmiş, parçalara ayrılmış ve bir FAISS vektör veritabanına gömülmüştür.
 
-## [cite_start]3. Çözüm Mimarisi ve Kullanılan Yöntemler [cite: 11, 23]
+## 3. Çözüm Mimarisi ve Kullanılan Yöntemler 
 
 Proje, Flask tabanlı bir web sunucusu üzerinde çalışan bir RAG (Retrieval Augmented Generation) mimarisi kullanır.
 
@@ -29,19 +29,19 @@ Proje, Flask tabanlı bir web sunucusu üzerinde çalışan bir RAG (Retrieval A
 2.  **Sorgu (Query):** Kullanıcı bir mesaj gönderdiğinde (`get_context_if_relevant` fonksiyonu), mesaj önce psikoloji ile ilgili anahtar kelimeler (`psi_keywords`) için taranır.
 3.  **Çekme (Retrieval):** Eğer mesaj ilgiliyse, kullanıcının sorusu bir vektöre dönüştürülür ve FAISS veritabanında en benzer (ilgili) bilgi parçaları (`similarity_search`) bulunur.
 4.  **Zenginleştirme (Augmentation):** Bulunan bu ilgili PDF parçaları (context), kullanıcının orijinal mesajı ve sistem talimatı (`system` prompt) ile birleştirilir.
-5.  **Üretim (Generation):** Bu zenginleştirilmiş prompt, `Gemini (gemini-2.0-flash-exp)` modeline gönderilir. [cite_start]Model, kendisine sağlanan bağlamı (BİLGİ BANKASI) kullanarak bir yanıt üretir[cite: 42].
+5.  **Üretim (Generation):** Bu zenginleştirilmiş prompt, `Gemini (gemini-2.0-flash-exp)` modeline gönderilir. Model, kendisine sağlanan bağlamı (BİLGİ BANKASI) kullanarak bir yanıt üretir[cite: 42].
 
 **Kullanılan Teknolojiler:**
-* [cite_start]**Generation Model:** Google Gemini (`gemini-2.0-flash-exp`) [cite: 42]
-* **Embedding Model:** `sentence-transformers/paraphrase-multilingual-MiniLM-L12-v2` [cite: 43]
-* [cite_start]**Vector Database:** `FAISS` (CPU versiyonu) [cite: 43]
-* [cite_start]**RAG Pipeline:** `LangChain` (PyPDFLoader, TextSplitter), `FAISS` [cite: 44]
+* **Generation Model:** Google Gemini (`gemini-2.0-flash-exp`) 
+* **Embedding Model:** `sentence-transformers/paraphrase-multilingual-MiniLM-L12-v2` 
+* **Vector Database:** `FAISS` (CPU versiyonu) 
+* **RAG Pipeline:** `LangChain` (PyPDFLoader, TextSplitter), `FAISS` 
 * **Web Arayüzü & Sunucu:** `Flask`
 
 **Hata Yönetimi:**
 Uygulama, Gemini API'sinden gelebilecek `503 Service Unavailable` (Aşırı Yüklenme) gibi geçici hatalara karşı dayanıklıdır. `generate_response` fonksiyonu, "Exponential Backoff" (Üstel Geri Çekilme) mekanizması sayesinde bir hata durumunda (toplam 3 kez) artan sürelerle bekleyerek isteği yeniden dener.
 
-## 4. Çalışma Kılavuzu [cite: 19, 21]
+## 4. Çalışma Kılavuzu 
 
 Projenin lokal makinenizde çalıştırılması için gereken adımlar:
 
@@ -82,7 +82,7 @@ Projenin lokal makinenizde çalıştırılması için gereken adımlar:
     * **İlk Çalıştırma:** Uygulama ilk kez çalıştığında, PDF dosyalarını okuyacak, işleyecek ve `faiss_index` klasörünü oluşturacaktır. Bu işlem birkaç dakika sürebilir. Konsolda "bilgi parçası indekslendi" mesajını göreceksiniz.
     * **Sonraki Çalıştırmalar:** İkinci ve sonraki çalıştırmalarda, uygulama mevcut `faiss_index` klasörünü yükleyerek çok daha hızlı başlayacaktır.
 
-## [cite_start]5. Web Arayüzü & Product Kılavuzu [cite: 24, 25]
+## 5. Web Arayüzü & Product Kılavuzu 
 
 Uygulama başarıyla başladığında, konsolda şu çıktıyı göreceksiniz:
 `* Running on http://127.0.0.1:5000`
@@ -90,7 +90,7 @@ Uygulama başarıyla başladığında, konsolda şu çıktıyı göreceksiniz:
 1.  Tarayıcınızda `http://127.0.0.1:5000` adresini açın.
 2.  Modern ve duyarlı bir sohbet arayüzü sizi karşılayacaktır.
 
-[cite_start]**Kabiliyetleri Test Etme:** [cite: 25]
+**Kabiliyetleri Test Etme:** 
 * **Normal Sohbet:** "Merhaba, nasılsın?", "Bana bir fıkra anlatır mısın?" gibi genel sorular sorun.
 * **RAG (Psikoloji) Sohbeti:** Veri setindeki bilgilere dayalı spesifik sorular sorun:
     * "BDT nedir?"
@@ -99,16 +99,15 @@ Uygulama başarıyla başladığında, konsolda şu çıktıyı göreceksiniz:
     * "Panik atak nedir?"
 
 Arayüzün Ekran Görüntüsü:
-*(Buraya `Ekran görüntüsü 2025-10-22 210201.png` gibi bir ekran görüntüsü ekleyebilirsin)*
-![Ayla AI Ekran Görüntüsü](https://i.imgur.com/ORNEK_RESIM.png)
+![Ayla AI Arayüzü](./arayuz.png)
 
 
-## [cite_start]6. Elde Edilen Sonuçlar [cite: 12]
+## 6. Elde Edilen Sonuçlar 
 
 Proje sonucunda, hem genel konularda sohbet edebilen hem de sağlanan PDF kaynaklarına dayanarak spesifik psikoloji sorularına yanıt verebilen, çift yetenekli bir chatbot başarıyla geliştirilmiştir. Flask arayüzü, hızlı ve modern bir kullanıcı deneyimi sunmaktadır. Eklenen yeniden deneme mekanizması, API kaynaklı geçici bağlantı sorunlarına karşı sistemi dayanıklı hale getirmiştir.
 
-## [cite_start]7. Web Linki [cite: 13]
+## 7. Web Linki 
 
 *(Eğer projeni Hugging Face Spaces, Streamlit Cloud, PythonAnywhere vb. bir platforma yüklersen (deploy edersen), çalışan linki buraya eklemelisin. Lokal çalışma için bu kısım boş kalabilir.)*
 
-**Deploy Linki:** `Henüz deploy edilmedi.`
+**Deploy Linki:** https://huggingface.co/spaces/humeyraturkk/AYLA-AI-Projesi
